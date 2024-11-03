@@ -1,24 +1,28 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const userRoutes = require("./routes/users");
-const reviewRoutes = require("./routes/reviews");
 const bodyParser = require("body-parser");
-const authRoutes = require("./routes/auth");
+const reviewRoutes = require("./routes/reviews");
+const registerRoute = require("./routes/register");
+const createAdminAccount = require("./scripts/admin");
 
 require("dotenv").config();
 
 const app = express();
 
+// Middlewares
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.json());
 
-app.use("/users", userRoutes);
-app.use("/reviews", reviewRoutes);
+// Create admin account
+createAdminAccount(); 
 
 // Routes
-app.use("/api/auth", authRoutes);
+app.use("/reviews", reviewRoutes);
+app.use("/register", registerRoute);
 
+// MongoDB Configuration
 const PORT = 5001;
 
 app.listen(PORT, () => {
