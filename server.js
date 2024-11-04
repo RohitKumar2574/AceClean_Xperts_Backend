@@ -4,6 +4,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const reviewRoutes = require("./routes/reviews");
 const registerRoute = require("./routes/register");
+const loginRoute = require("./routes/login");
 const createAdminAccount = require("./scripts/admin");
 
 require("dotenv").config();
@@ -16,11 +17,12 @@ app.use(express.json());
 app.use(bodyParser.json());
 
 // Create admin account
-createAdminAccount(); 
+createAdminAccount();
 
 // Routes
 app.use("/reviews", reviewRoutes);
 app.use("/register", registerRoute);
+app.use("/auth", loginRoute);
 
 // MongoDB Configuration
 const PORT = 5001;
