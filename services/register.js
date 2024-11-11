@@ -2,16 +2,18 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 
 async function createUser(userData) {
-  const { name, email, password, role } = userData;
+  const { name, email, username, password, role } = userData;
   const hashedPassword = await bcrypt.hash(password, 10);
-  const createdUser = new User({
+
+  const newUser = new User({
     name,
     email,
-    password: hashedPassword, // store hashed password in `password` field
-    role: role || "customer", // default to "customer" if role is not provided
+    username,
+    password: hashedPassword,
+    role: role || "customer",
   });
 
-  const savedUser = await createdUser.save();
+  const savedUser = await newUser.save();
   return savedUser;
 }
 
