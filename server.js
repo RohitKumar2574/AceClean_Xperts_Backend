@@ -1,3 +1,4 @@
+// server.js
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -6,6 +7,7 @@ const reviewRoutes = require("./routes/reviews");
 const registerRoute = require("./routes/register");
 const loginRoute = require("./routes/login");
 const createAdminAccount = require("./scripts/admin");
+const userRoute = require("./routes/user"); // Import userRoute
 
 require("dotenv").config(); // Load environment variables from .env file
 
@@ -20,6 +22,7 @@ app.use(bodyParser.json());
 app.use("/reviews", reviewRoutes);
 app.use("/register", registerRoute);
 app.use("/auth", loginRoute);
+app.use("/api", userRoute); // Use the userRoute here
 
 // MongoDB Configuration
 const mongoURI = process.env.MONGODB_URI; // Get MongoDB URI from .env file
