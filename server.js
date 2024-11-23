@@ -1,4 +1,3 @@
-// server.js
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -7,25 +6,26 @@ const reviewRoutes = require("./routes/reviews");
 const registerRoute = require("./routes/register");
 const loginRoute = require("./routes/login");
 const createAdminAccount = require("./scripts/admin");
-const userRoute = require("./routes/user"); // Import userRoute
+const userRoute = require("./routes/user");
+const scheduleRoute = require("./routes/schedule"); // Import scheduleRoute
 
 require("dotenv").config(); // Load environment variables from .env file
 
 const app = express();
 
 // Middleware
-app.use(cors());
-app.use(express.json());
-app.use(bodyParser.json());
+app.use(cors()); // Allow cross-origin requests
+app.use(express.json()); // Parse incoming JSON request bodies
 
 // Routes
 app.use("/reviews", reviewRoutes);
 app.use("/register", registerRoute);
 app.use("/auth", loginRoute);
-app.use("/api", userRoute); // Use the userRoute here
+app.use("/api", userRoute); // User route
+app.use("/api", scheduleRoute); // Schedule route for appointments
 
 // MongoDB Configuration
-const mongoURI = process.env.MONGODB_URI; // Get MongoDB URI from .env file
+const mongoURI = process.env.MONGODB_URI || "your_default_mongo_uri"; // Ensure this is correct
 const PORT = process.env.PORT || 5001; // Use environment variable for the port, default to 5001
 
 // MongoDB connection
