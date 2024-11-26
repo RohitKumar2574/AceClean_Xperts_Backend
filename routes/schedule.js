@@ -2,8 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Appointment = require("../models/Appointment");
 
-// POST: Create a new appointment
-router.post("/appointments", async (req, res) => {
+router.post("/", async (req, res) => {
   const {
     customerNameForCleaning,
     preferredDate,
@@ -17,7 +16,6 @@ router.post("/appointments", async (req, res) => {
   } = req.body;
 
   try {
-    // Check if the appointment time is already taken
     const existingAppointment = await Appointment.findOne({
       date: preferredDate,
       timeRange: preferredTimeRange,
@@ -29,7 +27,6 @@ router.post("/appointments", async (req, res) => {
         .json({ message: "Appointment slot already taken." });
     }
 
-    // Create a new appointment
     const newAppointment = new Appointment({
       customerName: customerNameForCleaning,
       date: preferredDate,
@@ -42,7 +39,6 @@ router.post("/appointments", async (req, res) => {
       totalPrice,
     });
 
-    // Save the appointment
     const savedAppointment = await newAppointment.save();
     return res.status(201).json({
       message: "Appointment successfully booked!",
@@ -50,7 +46,7 @@ router.post("/appointments", async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Failed to create appointment" });
+    return res.status(500).json({ message: "Failed to create appointment." });
   }
 });
 
