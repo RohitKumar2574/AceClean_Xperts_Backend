@@ -7,8 +7,8 @@ const registerRoute = require("./routes/register");
 const loginRoute = require("./routes/login");
 const createAdminAccount = require("./scripts/admin");
 const userRoute = require("./routes/user");
-const scheduleRoute = require("./routes/schedule"); // Import scheduleRoute
-
+const scheduleRoute = require("./routes/schedule");
+const errorHandler = require("./middlewares/errorHandlerMiddleware");
 require("dotenv").config();
 
 const app = express();
@@ -23,16 +23,15 @@ app.use("/reviews", reviewRoutes);
 app.use("/register", registerRoute);
 app.use("/auth", loginRoute);
 app.use("/api/users", userRoute);
-app.use("/api/appointments", scheduleRoute); // Correctly register the appointments route
+app.use("/api/appointments", scheduleRoute); 
 
 // MongoDB Configuration
-const mongoURI = process.env.MONGODB_URI || "your_default_mongo_uri";
+const mongoURI = process.env.MONGODB_URI;
 const PORT = process.env.PORT || 5001;
-
+console.log(mongoURI)
 mongoose
-  .connect("mongodb+srv://rktoor2574:rohit2574@cluster0.db9gs0u.mongodb.net/", {
+  .connect(mongoURI, {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
   })
   .then(() => {
     console.log("MongoDB connected");
@@ -42,6 +41,7 @@ mongoose
     console.error("MongoDB connection error:", err);
   });
 
+app.use(errorHandler);
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
