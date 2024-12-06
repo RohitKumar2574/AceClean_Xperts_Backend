@@ -9,6 +9,7 @@ const createAdminAccount = require("./scripts/admin");
 const userRoute = require("./routes/user");
 const scheduleRoute = require("./routes/schedule");
 const cleaningPackageRoutes = require("./routes/cleaningPackages.routes");
+const slots = require("./routes/slots.routes");
 const errorHandler = require("./middlewares/errorHandlerMiddleware");
 require("dotenv").config();
 
@@ -26,6 +27,7 @@ app.use("/auth", loginRoute);
 app.use("/api/users", userRoute);
 app.use("/api/appointments", scheduleRoute);
 app.use("/api/packages", cleaningPackageRoutes); // Added packages route
+app.use("/api/slots", slots);
 
 // MongoDB Configuration
 const mongoURI = process.env.MONGODB_URI;

@@ -10,6 +10,23 @@ const getAllPackages = async (req, res) => {
   }
 };
 
+const getAllPackageByType = async (req, res) => {
+  try {
+    const { type } = req.query;
+    let packages;
+    if(type){
+      packages = await Package.find({ type });
+    }else{
+      packages = await Package.find();
+    }
+
+    res.json(packages);
+  } catch (err) {
+    console.error("Error fetching packages:", err);
+    res.status(500).json({ error: "Error fetching packages" });
+  }
+};
+
 const createPackage = async (req, res) => {
   const { name, price, description, type } = req.body;
   try {
@@ -55,6 +72,7 @@ const deletePackage = async (req, res) => {
 
 module.exports = {
   getAllPackages,
+  getAllPackageByType,
   createPackage,
   updatePackage,
   deletePackage,

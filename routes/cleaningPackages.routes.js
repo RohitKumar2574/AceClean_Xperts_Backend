@@ -5,9 +5,11 @@ const {
   createPackage,
   updatePackage,
   deletePackage,
+  getAllPackageByType
 } = require("../controllers/cleaningPackage.controller");
 
 // Routes for cleaning packages
+router.get("/", getAllPackageByType);
 router.get("/", getAllPackages); // Fetch all packages
 router.post("/", createPackage); // Create a new package
 router.put("/:id", updatePackage); // Update a package by ID
