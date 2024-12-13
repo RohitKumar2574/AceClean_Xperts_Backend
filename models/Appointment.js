@@ -3,7 +3,7 @@
 const AppointmentSchema = new mongoose.Schema(
   {
     customerName: { type: String, required: true },
-    cleanerName: { type: String, required: true },
+    cleanerName: { type: String },
     date: { type: String, required: true },
     timeRange: { type: String, required: true },
     cleaningType: { type: String, required: true },

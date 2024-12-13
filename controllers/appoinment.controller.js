@@ -1,4 +1,5 @@
 const Appointment = require('../models/Appointment');
+const mongoose = require("mongoose")
 
 const bookAppointment = async (req, res, next) => {
     try {
@@ -13,7 +14,11 @@ const bookAppointment = async (req, res, next) => {
             packagePrice,
             hst,
             totalPrice,
+            userId
         } = req.body;
+
+        console.log(req.body);
+        
 
         const existingAppointment = await Appointment.findOne({
             date: preferredDate,
@@ -33,7 +38,7 @@ const bookAppointment = async (req, res, next) => {
             cleaningType,
             packageName,
             packageDetails,
-
+            userId: new mongoose.Types.ObjectId(userId),
             packagePrice,
             hst,
             totalPrice,

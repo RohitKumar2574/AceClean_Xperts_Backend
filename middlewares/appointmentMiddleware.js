@@ -1,14 +1,14 @@
 const { body, validationResult } = require("express-validator");
 
 const validateAppointment = [
-  body("customerName")
+  body("customerNameForCleaning")
     .trim()
     .notEmpty()
     .withMessage("Customer name is required."),
-  body("date")
+  body("preferredDate")
     .isDate({ format: "YYYY-MM-DD" })
     .withMessage("Date must be in the format YYYY-MM-DD."),
-  body("timeRange")
+  body("preferredTimeRange")
     .matches(/^(\d{1,2}:\d{2}\s?[APap][Mm])\s?-\s?(\d{1,2}:\d{2}\s?[APap][Mm])$/)
     .withMessage("Time range must be in the format 'HH:MM AM - HH:MM PM'."),
   body("cleaningType")
