@@ -1,6 +1,6 @@
 const Appointment = require('../models/Appointment');
-const mongoose = require("mongoose")
-
+const mongoose = require("mongoose");
+const moment = require("moment");
 const bookAppointment = async (req, res, next) => {
     try {
 
@@ -18,7 +18,7 @@ const bookAppointment = async (req, res, next) => {
         } = req.body;
 
         console.log(req.body);
-        
+
 
         const existingAppointment = await Appointment.findOne({
             date: preferredDate,
@@ -70,7 +70,9 @@ const getAppointments = async (req, res, next) => {
 
         let query = {};
         if (status) {
-            query.status = status;
+            if (status != 'all') {
+                query.status = status;
+            }
         }
 
         const [appointments, totalAppointments] = await Promise.all([
@@ -103,4 +105,66 @@ const getAppointments = async (req, res, next) => {
 
 }
 
-module.exports = { bookAppointment, getAppointments };
+const getGraphData = async (req, res) => {
+    try {
+        const [completedCount, pendingCount] = await Promise.all([
+            Appointment.countDocuments({ status: 'completed' }),
+            Appointment.countDocuments({ status: 'upcoming' })
+        ]);
+
+        res.json({
+            success: true,
+            completedCount, pendingCount
+        });
+
+    } catch (error) {
+        console.error('Error fetching appointment status data:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch appointment status data',
+            error: error.message
+        });
+    }
+};
+
+const getDailySalesData = async (req, res, next) => {
+    try {
+        // Get the last 30 days
+        const last30Days = [];
+        for (let i = 0; i < 30; i++) {
+            last30Days.push(moment().subtract(i, 'days').format('YYYY-MM-DD'));
+        }
+
+        const salesData = await Appointment.aggregate([
+            {
+                $match: {
+                    date: { $in: last30Days }
+                }
+            },
+            {
+                $group: {
+                    _id: "$date",
+                    totalSales: { $sum: "$totalPrice" }
+                }
+            },
+            {
+                $sort: { _id: 1 }
+            }
+        ]);
+
+        const formattedSales = last30Days.map(date => {
+            const salesForDate = salesData.find(sale => sale._id === date);
+            return salesForDate ? salesForDate.totalSales : 0;
+        });
+
+        res.json({
+            success: true,
+            data: formattedSales,
+        });
+    } catch (err) {
+        console.error("Error fetching daily sales:", err);
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+};
+
+module.exports = { bookAppointment, getAppointments, getGraphData, getDailySalesData };
